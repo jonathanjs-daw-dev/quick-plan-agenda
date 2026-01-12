@@ -30,6 +30,7 @@ b. Estructurar el código en componentes
 Los eventos deben cargarse desde un archivo local `eventos.json` (mínimo 8 eventos).
 
 Cada evento debe tener:
+
 - `id`
 - `titulo`
 - `categoria` (Charla / Torneo / Taller / Excursión)
@@ -40,11 +41,13 @@ Cada evento debe tener:
 ### 3. Pantalla principal: Lista de eventos
 
 Debe mostrar:
+
 - Título: **Agenda de eventos**
 - Lista en tarjetas o tabla con: título, categoría, fecha, lugar
 - Botón "Ver detalle" por evento
 
 Obligatorio en esta pantalla:
+
 - **Buscador** por texto (filtra por título o lugar)
 - **Filtro por categoría** (select o botones)
 - **Contador**: "Mostrando X de Y eventos"
@@ -52,6 +55,7 @@ Obligatorio en esta pantalla:
 ### 4. Detalle del evento
 
 Al pulsar "Ver detalle", se debe ver otra pantalla que muestre:
+
 - Título
 - Categoría
 - Fecha
@@ -59,12 +63,14 @@ Al pulsar "Ver detalle", se debe ver otra pantalla que muestre:
 - Descripción completa
 
 Además:
+
 - Botón **"Añadir a favoritos"**
 - Si ya está en favoritos, mostrar **"En favoritos"** y desactivar botón
 
 ### 5. Favoritos
 
 En la pantalla principal (o en una sección aparte) debe aparecer:
+
 - Lista de favoritos (títulos)
 - Botón **"Quitar de favoritos"**
 
@@ -164,11 +170,75 @@ b. Si el archivo no carga o está vacío, mostrar un mensaje de error
 ## Pasos para ejecutar
 
 1. Instalar dependencias:
+
 ```bash
 npm install
 ```
 
 2. Ejecutar en modo desarrollo:
+
 ```bash
 npm run dev
 ```
+
+---
+
+## ✨ Funcionalidades Implementadas
+
+### ✅ Completadas (100%)
+
+- **Lista de eventos**: Visualización en tarjetas con diseño responsive
+- **Buscador de texto**: Filtra eventos por título y lugar en tiempo real
+- **Filtro por categoría**: Selector desplegable con 4 categorías (Charla, Torneo, Taller, Excursión)
+- **Contador dinámico**: Muestra "X de Y eventos" según los filtros aplicados
+- **Vista de detalle**: Pantalla completa con toda la información del evento
+- **Sistema de favoritos**: Añadir/quitar favoritos con persistencia en localStorage
+- **Estados de carga**: Simulación de carga asíncrona con indicador visual
+- **Manejo de errores**: Mensajes de error con opción de reintentar
+- **Diseño responsive**: Adaptado para móvil, tablet y escritorio
+- **Animaciones**: Transiciones suaves y efectos hover
+
+## 🛠️ Tecnologías Utilizadas
+
+- **React 19** - Biblioteca para construir la interfaz de usuario
+- **Vite** - Build tool y servidor de desarrollo
+- **CSS3** - Estilos con variables CSS, Grid y Flexbox
+- **localStorage** - Persistencia de favoritos en el navegador
+
+## 📁 Estructura del Proyecto
+
+```
+quick-plan-agenda/
+├── src/
+│   ├── components/
+│   │   ├── EventCard.jsx      # Tarjeta individual de evento
+│   │   └── EventDetail.jsx    # Vista detallada del evento
+│   ├── data/
+│   │   └── eventos.json        # Datos de los eventos (10 eventos)
+│   ├── App.jsx                 # Componente principal
+│   ├── App.css                 # Estilos de la aplicación
+│   ├── main.jsx                # Punto de entrada
+│   └── index.css               # Estilos globales
+├── public/
+├── package.json
+└── README.md
+```
+
+## 📸 Capturas de Pantalla
+
+### Diseño Responsive, Vista de Detalle del Evento, Buscador y Filtros y Sistema de Favoritos
+
+![busqueda por categorias](./capturas/Screenshot%202026-01-12%20at%2010.18.52.png)
+![Detalle completo del evento](./capturas/Screenshot%202026-01-12%20at%2010.19.15.png)
+![Buscador en acción](./capturas/Screenshot%202026-01-12%20at%2010.20.35.png)
+![Gestión de favoritos](./capturas/Screenshot%202026-01-12%20at%2010.20.06.png)
+
+### Pantalla Principal - Lista de Eventos
+
+![Lista de eventos](./capturas/Screenshot%202026-01-12%20at%2010.21.06.png)
+
+---
+
+## 👨‍💻 Autor
+
+Jonathan Jiménez Salazar - Proyecto de Diciembre - Despliegue de Aplicaciones Web - DAW

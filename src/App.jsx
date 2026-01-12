@@ -9,6 +9,12 @@ const App = () => {
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("Todas");
   const [eventoSeleccionado, setEventoSeleccionado] = useState(null);
 
+  // carga de favoritos desde localStorage
+  const [favoritos, setFavoritos] = useState(() => {
+    const favoritosGuardados = localStorage.getItem("favoritos");
+    return favoritosGuardados ? JSON.parse(favoritosGuardados) : [];
+  });
+
   useEffect(() => {
     setEventos(eventosData);
   }, []);
@@ -19,6 +25,22 @@ const App = () => {
 
   const volverALista = () => {
     setEventoSeleccionado(null);
+  };
+
+  const añadirAFavoritos = (eventoId) => {
+    const nuevosFavoritos = [...favoritos, eventoId];
+    setFavoritos(nuevosFavoritos);
+    localStorage.setItem("favoritos", JSON.stringify(nuevosFavoritos));
+  };
+
+  const quitarDeFavoritos = (eventoId) => {
+    const nuevosFavoritos = favoritos.filter((id) => id !== eventoId);
+    setFavoritos(nuevosFavoritos);
+    localStorage.setItem("favoritos", JSON.stringify(nuevosFavoritos));
+  };
+
+  const estaEnFavoritos = (eventoId) => {
+    return favoritos.some((id) => id === eventoId);
   };
 
   const eventosFiltrados = eventos.filter((evento) => {
@@ -50,12 +72,35 @@ const App = () => {
     <div className="App">
       <h1>QuickPlan - Agenda de Eventos</h1>
       {eventoSeleccionado ? (
-        <EventDetail evento={eventoSeleccionado} onVolver={volverALista} />
+        <EventDetail
+          evento={eventoSeleccionado}
+          onVolver={volverALista}
+          onAñadirFavorito={añadirAFavoritos}
+          estaEnFavoritos={estaEnFavoritos}
+        />
       ) : (
         <>
           <p>
             Mostrando {eventosFiltrados.length} de {eventos.length} eventos
           </p>
+          {favoritos.length > 0 && (
+            <div className="seccion-favoritos">
+              <h2>Mis Favoritos ({favoritos.length})</h2>
+              <ul>
+                {favoritos.map((favoritoId) => {
+                  const evento = eventos.find((e) => e.id === favoritoId);
+                  return evento ? (
+                    <li key={favoritoId}>
+                      {evento.titulo}
+                      <button onClick={() => quitarDeFavoritos(favoritoId)}>
+                        ✕ Quitar
+                      </button>
+                    </li>
+                  ) : null;
+                })}
+              </ul>
+            </div>
+          )}
           <div className="buscador">
             <input
               type="text"

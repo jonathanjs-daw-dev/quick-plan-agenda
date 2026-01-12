@@ -39,7 +39,7 @@ const App = () => {
   return (
     <div className="App">
       <h1>QuickPlan - Agenda de Eventos</h1>
-      <p>Eventos cargados {eventos.length}</p>
+      <p>Mostrando {eventosFiltrados.length} de {eventos.length} eventos</p>
       <div className="buscador">
         <input
           type="text"

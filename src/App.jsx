@@ -9,6 +9,9 @@ const App = () => {
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("Todas");
   const [eventoSeleccionado, setEventoSeleccionado] = useState(null);
 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   // carga de favoritos desde localStorage
   const [favoritos, setFavoritos] = useState(() => {
     const favoritosGuardados = localStorage.getItem("favoritos");
@@ -16,7 +19,19 @@ const App = () => {
   });
 
   useEffect(() => {
-    setEventos(eventosData);
+    // simulamos carga de datos
+    setLoading(true);
+    setError(null);
+
+    setTimeout(() => {
+      try {
+        setEventos(eventosData);
+        setLoading(false);
+      } catch (error) {
+        setError("Error al cargar los eventos.");
+        setLoading(false);
+      }
+    }, 1500); // 1.5 segundos de retraso somulado
   }, []);
 
   const verDetalle = (evento) => {
@@ -71,69 +86,90 @@ const App = () => {
   return (
     <div className="App">
       <h1>QuickPlan - Agenda de Eventos</h1>
-      {eventoSeleccionado ? (
-        <EventDetail
-          evento={eventoSeleccionado}
-          onVolver={volverALista}
-          onAñadirFavorito={añadirAFavoritos}
-          estaEnFavoritos={estaEnFavoritos}
-        />
-      ) : (
+      {loading ? (
+        <div className="loading">
+          <p>Cargando eventos...</p>
+        </div>
+      ) : null}
+      {error ? (
+        <div className="error">
+          <p>Error: {error}</p>
+          <button onClick={() => window.location.reload()}>Reintentar</button>
+        </div>
+      ) : null}
+      {!loading && !error ? (
         <>
-          <p>
-            Mostrando {eventosFiltrados.length} de {eventos.length} eventos
-          </p>
-          {favoritos.length > 0 && (
-            <div className="seccion-favoritos">
-              <h2>Mis Favoritos ({favoritos.length})</h2>
-              <ul>
-                {favoritos.map((favoritoId) => {
-                  const evento = eventos.find((e) => e.id === favoritoId);
-                  return evento ? (
-                    <li key={favoritoId}>
-                      {evento.titulo}
-                      <button onClick={() => quitarDeFavoritos(favoritoId)}>
-                        ✕ Quitar
-                      </button>
-                    </li>
-                  ) : null;
-                })}
-              </ul>
-            </div>
-          )}
-          <div className="buscador">
-            <input
-              type="text"
-              placeholder="Buscar eventos por titulo o lugar..."
-              value={busqueda}
-              onChange={(ev) => setBusqueda(ev.target.value)}
+          {eventoSeleccionado ? (
+            <EventDetail
+              evento={eventoSeleccionado}
+              onVolver={volverALista}
+              onAñadirFavorito={añadirAFavoritos}
+              estaEnFavoritos={estaEnFavoritos}
             />
-          </div>
-          <div className="filtro-categoria">
-            <label htmlFor="categoria">Categoria: </label>
-            <select
-              id="categoria"
-              value={categoriaSeleccionada}
-              onChange={(ev) => setCategoriaSeleccionada(ev.target.value)}
-            >
-              <option value="Todas">Todas las categorías</option>
-              <option value="Charla">Charla</option>
-              <option value="Torneo">Torneo</option>
-              <option value="Taller">Taller</option>
-              <option value="Excursión">Excursión</option>
-            </select>
-          </div>
-          <div className="eventos-lista">
-            {eventosFiltrados.map((evento) => (
-              <EventCard
-                key={evento.id}
-                evento={evento}
-                onVerDetalle={verDetalle}
-              />
-            ))}
-          </div>
+          ) : (
+            <>
+              <p>
+                Mostrando {eventosFiltrados.length} de {eventos.length} eventos
+              </p>
+              {favoritos.length > 0 && (
+                <div className="seccion-favoritos">
+                  <h2>Mis Favoritos ({favoritos.length})</h2>
+                  <ul>
+                    {favoritos.map((favoritoId) => {
+                      const evento = eventos.find((e) => e.id === favoritoId);
+                      return evento ? (
+                        <li key={favoritoId}>
+                          {evento.titulo}
+                          <button onClick={() => quitarDeFavoritos(favoritoId)}>
+                            ✕ Quitar
+                          </button>
+                        </li>
+                      ) : null;
+                    })}
+                  </ul>
+                </div>
+              )}
+              <div className="buscador">
+                <input
+                  type="text"
+                  placeholder="Buscar eventos por titulo o lugar..."
+                  value={busqueda}
+                  onChange={(ev) => setBusqueda(ev.target.value)}
+                />
+              </div>
+              <div className="filtro-categoria">
+                <label htmlFor="categoria">Categoria: </label>
+                <select
+                  id="categoria"
+                  value={categoriaSeleccionada}
+                  onChange={(ev) => setCategoriaSeleccionada(ev.target.value)}
+                >
+                  <option value="Todas">Todas las categorías</option>
+                  <option value="Charla">Charla</option>
+                  <option value="Torneo">Torneo</option>
+                  <option value="Taller">Taller</option>
+                  <option value="Excursión">Excursión</option>
+                </select>
+              </div>
+              <div className="eventos-lista">
+                {eventosFiltrados.length === 0 ? (
+                  <p className="sin-resultados">
+                    No se encontraron eventos con esos criterios
+                  </p>
+                ) : (
+                  eventosFiltrados.map((evento) => (
+                    <EventCard
+                      key={evento.id}
+                      evento={evento}
+                      onVerDetalle={verDetalle}
+                    />
+                  ))
+                )}
+              </div>
+            </>
+          )}
         </>
-      )}
+      ) : null}
     </div>
   );
 };

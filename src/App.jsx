@@ -5,19 +5,35 @@ import EventCard from "./components/EventCard";
 const App = () => {
   const [eventos, setEventos] = useState([]);
   const [busqueda, setBusqueda] = useState("");
+  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("Todas");
 
   useEffect(() => {
     setEventos(eventosData);
   }, []);
 
   const eventosFiltrados = eventos.filter((evento) => {
+    // Filtro de texto (busqueda)
     const tituloCoincide = evento.titulo
       .toLowerCase()
       .includes(busqueda.toLowerCase());
     const lugarCoincide = evento.lugar
       .toLowerCase()
       .includes(busqueda.toLowerCase());
-    return tituloCoincide || lugarCoincide;
+    const coincideBusqueda = tituloCoincide || lugarCoincide;
+    // Agrupa la lógica de búsqueda en una variable
+    // Es true si coincide en título O lugar
+
+    // Filtro de categoria
+    const coincideCategoria =
+      categoriaSeleccionada === "Todas" ||
+      evento.categoria === categoriaSeleccionada;
+    // Si categoría es "Todas" → siempre true (muestra todo)
+    // Si no, verifica que la categoría del evento coincida con la seleccionada
+
+    // Debe de cumplir ambos filtros
+    return coincideBusqueda && coincideCategoria;
+    // Operador &&: ambas condiciones deben ser verdaderas
+    // Solo muestra eventos que cumplen AMBOS filtros
   });
 
   return (
@@ -31,6 +47,16 @@ const App = () => {
           value={busqueda}
           onChange={(ev) => setBusqueda(ev.target.value)}
         />
+      </div>
+      <div className="filtro-categoria">
+        <label htmlFor="categoria">Categoria: </label>
+        <select id="categoria" value={categoriaSeleccionada} onChange={(ev) => setCategoriaSeleccionada(ev.target.value)}>
+          <option value="Todas">Todas las categorías</option>
+          <option value="Charla">Charla</option>
+          <option value="Torneo">Torneo</option>
+          <option value="Taller">Taller</option>
+          <option value="Excursión">Excursión</option>
+        </select>
       </div>
       <div className="eventos-lista">
         {eventosFiltrados.map((evento) => (

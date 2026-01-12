@@ -1,4 +1,4 @@
-const EventCard = ({ evento }) => {
+const EventCard = ({ evento, onVerDetalle }) => {
   return (
     <div className="event-card">
       <h3>{evento.titulo}</h3>
@@ -11,6 +11,7 @@ const EventCard = ({ evento }) => {
       <p>
         <strong>Lugar:</strong> {evento.lugar}
       </p>
+      <button onClick={() => onVerDetalle(evento)}>Ver Detalles</button>
     </div>
   );
 };

@@ -1,15 +1,25 @@
 import { useState, useEffect } from "react";
 import eventosData from "./data/eventos.json";
 import EventCard from "./components/EventCard";
+import EventDetail from "./components/EventDetail";
 
 const App = () => {
   const [eventos, setEventos] = useState([]);
   const [busqueda, setBusqueda] = useState("");
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("Todas");
+  const [eventoSeleccionado, setEventoSeleccionado] = useState(null);
 
   useEffect(() => {
     setEventos(eventosData);
   }, []);
+
+  const verDetalle = (evento) => {
+    setEventoSeleccionado(evento);
+  };
+
+  const volverALista = () => {
+    setEventoSeleccionado(null);
+  };
 
   const eventosFiltrados = eventos.filter((evento) => {
     // Filtro de texto (busqueda)
@@ -39,30 +49,46 @@ const App = () => {
   return (
     <div className="App">
       <h1>QuickPlan - Agenda de Eventos</h1>
-      <p>Mostrando {eventosFiltrados.length} de {eventos.length} eventos</p>
-      <div className="buscador">
-        <input
-          type="text"
-          placeholder="Buscar eventos por titulo o lugar..."
-          value={busqueda}
-          onChange={(ev) => setBusqueda(ev.target.value)}
-        />
-      </div>
-      <div className="filtro-categoria">
-        <label htmlFor="categoria">Categoria: </label>
-        <select id="categoria" value={categoriaSeleccionada} onChange={(ev) => setCategoriaSeleccionada(ev.target.value)}>
-          <option value="Todas">Todas las categorías</option>
-          <option value="Charla">Charla</option>
-          <option value="Torneo">Torneo</option>
-          <option value="Taller">Taller</option>
-          <option value="Excursión">Excursión</option>
-        </select>
-      </div>
-      <div className="eventos-lista">
-        {eventosFiltrados.map((evento) => (
-          <EventCard key={evento.id} evento={evento} />
-        ))}
-      </div>
+      {eventoSeleccionado ? (
+        <EventDetail evento={eventoSeleccionado} onVolver={volverALista} />
+      ) : (
+        <>
+          <p>
+            Mostrando {eventosFiltrados.length} de {eventos.length} eventos
+          </p>
+          <div className="buscador">
+            <input
+              type="text"
+              placeholder="Buscar eventos por titulo o lugar..."
+              value={busqueda}
+              onChange={(ev) => setBusqueda(ev.target.value)}
+            />
+          </div>
+          <div className="filtro-categoria">
+            <label htmlFor="categoria">Categoria: </label>
+            <select
+              id="categoria"
+              value={categoriaSeleccionada}
+              onChange={(ev) => setCategoriaSeleccionada(ev.target.value)}
+            >
+              <option value="Todas">Todas las categorías</option>
+              <option value="Charla">Charla</option>
+              <option value="Torneo">Torneo</option>
+              <option value="Taller">Taller</option>
+              <option value="Excursión">Excursión</option>
+            </select>
+          </div>
+          <div className="eventos-lista">
+            {eventosFiltrados.map((evento) => (
+              <EventCard
+                key={evento.id}
+                evento={evento}
+                onVerDetalle={verDetalle}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 };

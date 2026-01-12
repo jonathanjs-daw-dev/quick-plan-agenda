@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import eventosData from "./data/eventos.json";
 import EventCard from "./components/EventCard";
 import EventDetail from "./components/EventDetail";
+import "./App.css";
 
 const App = () => {
   const [eventos, setEventos] = useState([]);
